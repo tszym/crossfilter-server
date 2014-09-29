@@ -182,5 +182,7 @@ function crossfilterServer(metadata) {
   // import "dimension.js"
   ////////////////////////////////////////
 
+  // importTest "crossfilter-server-test-accessors.js"
+
   return crossfilterServerObj;
 }

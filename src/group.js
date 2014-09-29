@@ -38,6 +38,8 @@ function group() {
     size: size,
     dispose: dispose
   };
+  // importTest "group-test-accessors.js"
+
 
   var sortFunc = null;
 
@@ -176,6 +178,7 @@ function group() {
   **/
   function dispose() {
   }
+
 
   return groupObj;
 }

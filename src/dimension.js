@@ -282,5 +282,7 @@ function dimension(dimensionFct) {
   // import "group.js"
   ////////////////////////////////////////
 
+  // importTest "dimension-test-accessors.js"
+
   return dimensionObj;
 }

@@ -4,7 +4,12 @@ module.exports = function (grunt) {
   var output = {
     js: '<%= pkg.name %>.js',
     jsmin: '<%= pkg.name %>.min.js',
-    map: '<%= pkg.name %>.min.js.map'
+    map: '<%= pkg.name %>.min.js.map',
+    test: {
+      js: '<%= pkg.name %>.test.js',
+      jsmin: '<%= pkg.name %>.test.min.js',
+      map: '<%= pkg.name %>.test.min.js.map'
+    }
   };
 
   grunt.initConfig({
@@ -18,7 +23,16 @@ module.exports = function (grunt) {
           includeRegexp: /^\s*\/\/\s*import\s+['"]?([^'"]+)['"]?\s*$/,
           duplicates: false
         },
-      }
+      },
+      tests: {
+        src: output.js,
+        dest: output.test.js,
+        options: {
+          includeRegexp: /^\s*\/\/\s*importTest\s+['"]?([^'"]+)['"]?\s*$/,
+          duplicates: false,
+          includePath: 'src/'
+        },
+      },
     },
     uglify: {
       jsmin: {
@@ -29,13 +43,22 @@ module.exports = function (grunt) {
         },
         src: output.js,
         dest: output.jsmin
+      },
+      jsminTest: {
+        options: {
+          mangle: true,
+          compress: true,
+          sourceMap: output.test.map
+        },
+        src: output.test.js,
+        dest: output.test.jsmin
       }
     },
     sed: {
       version: {
         pattern: '%VERSION%',
         replacement: '<%= pkg.version %>',
-        path: [output.js, output.jsmin]
+        path: [output.js, output.jsmin, output.test.js, output.test.jsmin]
       }
     },
     jshint: {
@@ -86,9 +109,7 @@ module.exports = function (grunt) {
           outfile: "spec/index.html",
           keepRunner: true
         },
-        src: [
-          'web/js/'+output.js
-        ]
+        src: output.test.js
       },
       coverage:{
         src: '<%= jasmine.specs.src %>',
