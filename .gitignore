@@ -1,0 +1,11 @@
+/*.js
+**/*.swp
+**/*.min.js
+**/*.min.js.map
+/.grunt/
+/coverage/
+/spec/index.html
+/node_modules/
+/web/js/
+/web/docs/
+_SpecRunner.html
