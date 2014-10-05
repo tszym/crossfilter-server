@@ -66,7 +66,7 @@ module.exports = function (grunt) {
         src: ['src/**/*.js','spec/**/*.js','Gruntfile.js'],
         options: {
           indent: 2,
-          ignores: ['src/header.js','src/footer.js']
+          ignores: ['**/*.min.js']
         }
       }
     },
@@ -106,7 +106,19 @@ module.exports = function (grunt) {
           specs:  "spec/*-spec.js",
           helpers: "spec/helpers/*.js",
           version: "2.0.0",
-          outfile: "spec/index.html",
+          outfile: "spec/unit.html",
+          keepRunner: true
+        },
+        src: output.test.js
+      },
+      integration: {
+        options: {
+          display: "short",
+          summary: true,
+          specs:  "spec/*-spec.js",
+          helpers: "spec/integrationHelpers/*.js",
+          version: "2.0.0",
+          outfile: "spec/integration.html",
           keepRunner: true
         },
         src: output.test.js
@@ -219,6 +231,8 @@ module.exports = function (grunt) {
   grunt.registerTask('server', ['docs', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
   grunt.registerTask('test', ['docs', 'jasmine:specs']);
   grunt.registerTask('testloop', ['test', 'watch:tests']);
+  grunt.registerTask('testintegr', ['docs', 'jasmine:integration']);
+  grunt.registerTask('testintegrloop', ['docs', 'jasmine:integration']);
   grunt.registerTask('coverage', ['docs', 'jasmine:coverage']);
   grunt.registerTask('lint', ['build', 'jshint']);
   grunt.registerTask('default', ['build']);
