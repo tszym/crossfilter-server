@@ -42,6 +42,14 @@ describe('group', function() {
     });
   });
 
+  describe('reduce', function() {
+    it('should all to get multiple measures if specified', function() {
+      group2.reduce(reduceAdd, reduceRemove, reduceInitial);
+      expect(group2.all()).toEqual(getTestData().noFilter.group2AllReduce);
+      console.log(JSON.stringify(group2.all()));
+    });
+  });
+
   describe('top (with orders)', function() {
     it('should return top k data according to the set order', function() {
       var metadataOrder = getCubeOrder();

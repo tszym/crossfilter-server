@@ -58,7 +58,7 @@ function getCube() {
     "api" : getAPI(),
     "schema" : "Olap",
     "cube" : "[Loading]",
-    "measure" : "[Measures].[Goods unloaded ktons]",
+    "measures" : ["[Measures].[Goods unloaded ktons]", "[Measures].[Goods loaded ktons]"],
     "dimensions" : {
       "[Modes of Transport]" : {
         "hierarchy" : "[Modes of Transport.Name]",
@@ -77,6 +77,22 @@ function getCube() {
       }
     }
   };
+}
+
+function reduceInitial(p, v) {
+  return {"[Measures].[Goods unloaded ktons]" : 0, "[Measures].[Goods loaded ktons]" : 0};
+}
+
+function reduceRemove() {
+  p["[Measures].[Goods unloaded ktons]"]       -= v["[Measures].[Goods unloaded ktons]"];
+  p["[Measures].[Goods unloadedloaded ktons]"] -= v["[Measures].[Goods loaded ktons]"];
+  return p;
+}
+
+function reduceAdd(p, v) {
+  p["[Measures].[Goods unloaded ktons]"]       += v["[Measures].[Goods unloaded ktons]"];
+  p["[Measures].[Goods unloadedloaded ktons]"] += v["[Measures].[Goods loaded ktons]"];
+  return p;
 }
 
 function getCubeOrder() {
@@ -114,6 +130,12 @@ function getTestData() {
   return {
     groupAll: 29066815,
     noFilter: {
+      group2AllReduce : [ { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Air]', value: { "[Measures].[Goods unloaded ktons]": 0, "[Measures].[Goods loaded ktons]": 0 } },
+                          { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Inland Waterway]', value: { "[Measures].[Goods unloaded ktons]": 0, "[Measures].[Goods loaded ktons]": 0 } },
+                          { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Rail]', value: { "[Measures].[Goods unloaded ktons]": 0, "[Measures].[Goods loaded ktons]": 0 } },
+                          { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Road]', value: { "[Measures].[Goods unloaded ktons]": 0, "[Measures].[Goods loaded ktons]": 0 } },
+                          { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Shortsea Shipping and Inland Waterway]', value: { "[Measures].[Goods unloaded ktons]": 29066815, "[Measures].[Goods loaded ktons]": 18226770 } },
+                          { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Shortsea Shipping]', value: { "[Measures].[Goods unloaded ktons]": 0, "[Measures].[Goods loaded ktons]": 0 } } ],
       group2All : [{ key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Air]', value: 0 },
                    { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Inland Waterway]', value: 0 },
                    { key: '[Modes of Transport.Name].[All Modes of Transport.Names].[Rail]', value: 0 },

@@ -26,6 +26,8 @@ total, then group by total only observes the filter by type.
 **/
 function group() {
 
+  var reduceMeasures = [];
+
   // returned object with function accessors
   var groupObj = {
     top: top,
@@ -53,7 +55,7 @@ function group() {
       sortFunc = function(d) { return d; };
 
     var out = [];
-    var data = getData(dimensionName);
+    var data = all();
 
     // copy data
     for (var i = 0; i < data.length; i++) {
@@ -84,7 +86,10 @@ function group() {
   ```
   **/
   function all() {
-    return getData(dimensionName);
+    if (reduceMeasures.length > 0)
+      return getData(dimensionName, true, reduceMeasures);
+    else
+      return getData(dimensionName, true);
   }
 
   /**
@@ -111,14 +116,15 @@ function group() {
   }
 
   /**
-  ### crossfilterServer.dimension.group.reduce(), reduceCount(), reduceSum()
+  ### crossfilterServer.dimension.group.reduce(add, remove, initial), reduceCount(), reduceSum()
 
   These functions are here for compatibility with crossfilter interfaces but actually does nothing
   because currently we can't choose how the database will aggregate data.
 
   Currently, the agregate function is the one your API use.
   **/
-  function reduce() {
+  function reduce(add, remove, initial) {
+    reduceMeasures = Object.keys(initial());
     return groupObj;
   }
   function reduceCount() {

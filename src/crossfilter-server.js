@@ -18,7 +18,7 @@ metadata = {
   api : APIObject,
   schema : "<schemaId>",
   cube : "<cubeId>",
-  measure : "<mesureId>",
+  measures : ["<defaultMesureId>","<mesure2Id>",..],
   dimensions : {
     <dim1Id> : {
       hierarchy : "<hierarchyId>",
@@ -46,11 +46,11 @@ function crossfilterServer(metadata) {
   var dimensions = metadata.dimensions;
 
   // check validity of metadata
-  if (typeof api              != "object" ||
-      typeof metadata.schema  != "string" ||
-      typeof metadata.cube    != "string" ||
-      typeof metadata.measure != "string" ||
-      typeof dimensions       != "object" ||
+  if (typeof api               != "object" ||
+      typeof metadata.schema   != "string" ||
+      typeof metadata.cube     != "string" ||
+      typeof metadata.measures != "object" ||
+      typeof dimensions        != "object" ||
       Object.keys(dimensions).length < 1)
   {
     throw "Metadata are malformed";
@@ -95,18 +95,21 @@ function crossfilterServer(metadata) {
    * get data for this dimension
    * @param {String} [dimensionName=null] - dimension that won't be filtered
    * @param {Boolean} [dice=true] - dice the dimension `dimensionName`
+   * @param {Array<String>} [measures] - list of measures to keep
    * @private
    */
-  function getData(dimensionName, dice) {
+  function getData(dimensionName, dice, measures) {
     dimensionName = (dimensionName === undefined || dimensionName === null) ? "_all" : dimensionName;
     dice          = (dice          === undefined) ? true : dice;
+    measures      = (measures      === undefined) ? [metadata.measures[0]] : measures;
 
-    if (typeof datasets[dimensionName] == "undefined") {
+    if (measures.length > 1 || typeof datasets[dimensionName] == "undefined") {
 
       // init query
       api.clear();
       api.drill(metadata.cube);
-      api.push(metadata.measure);
+      for (var i in measures)
+        api.push(measures[i]);
 
       // Slice cube according to current slices + filters (exect current dim. filters)
       for (var dim in dimensions) {
@@ -121,11 +124,19 @@ function crossfilterServer(metadata) {
         api.dice([dimensions[dimensionName].hierarchy]);
 
       // run query & format data like CF does & sort by key
-      datasets[dimensionName] = api.execute().map(function(d) {
-        return {
-          "key" : d[dimensionName],
-          "value" : d[metadata.measure]
+      var data = api.execute().map(function(d) {
+        var out = {
+          "key" : d[dimensionName]
         };
+        if (measures.length == 1) {
+          out.value = d[measures[0]];
+        }
+        else {
+          out.value = {};
+          for (var i in measures)
+            out.value[measures[i]] = d[measures[i]];
+        }
+        return out;
       }).sort(function (a, b) {
         if (a.key > b.key) {
           return 1;
@@ -133,6 +144,10 @@ function crossfilterServer(metadata) {
           return -1;
         }
       });
+
+      if (measures.length == 1)
+        datasets[dimensionName] = data;
+      return data;
     }
 
     return datasets[dimensionName];
