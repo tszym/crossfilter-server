@@ -1,6 +1,6 @@
 {
   "name": "crossfilter-server",
-  "version": "0.1.0",
+  "version": "1.0",
   "license": "MIT",
   "copyright": "2014",
   "description": "Crossfilter Server is a JavaScript class that implements the interfaces of crossfilter but uses an OLAP server to compute filters and agregates on an OLAP cube.",
