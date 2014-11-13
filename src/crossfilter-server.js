@@ -103,8 +103,9 @@ function crossfilterServer(metadata) {
     dimensionName = (dimensionName === undefined || dimensionName === null) ? "_all" : dimensionName;
     dice          = (dice          === undefined) ? true : dice;
     measures      = (measures      === undefined) ? [metadata.measures[0]] : measures;
+    datasetKey    = measures.sort().join(',');
 
-    if (measures.length > 1 || typeof datasets[dimensionName] == "undefined") {
+    if (typeof datasets[dimensionName] == "undefined" || typeof datasets[dimensionName][datasetKey] == "undefined") {
 
       // init query
       api.clear();
@@ -146,12 +147,12 @@ function crossfilterServer(metadata) {
         }
       });
 
-      if (measures.length == 1)
-        datasets[dimensionName] = data;
-      return data;
+      if (typeof datasets[dimensionName] == "undefined")
+        datasets[dimensionName] = {};
+      datasets[dimensionName][datasetKey] = data;
     }
 
-    return datasets[dimensionName];
+    return datasets[dimensionName][datasetKey];
   }
 
 
