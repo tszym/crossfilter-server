@@ -34,7 +34,8 @@ metadata = {
 
 Note that you will pass a reference to an API Object that will allow
 `crossfilterServer` to query the server. This API should implement the
-same interfaces as [solap4py-js](https://github.com/loganalysis/solap4py-js)
+specifications described at
+[Javascript Query API for OLAP](https://github.com/loganalysis/mandoline/wiki/Javascript-Query-API-for-OLAP)
 for this class to work. You can also rewrite the function `getData()`
 to adapt it to your own API.
 
