@@ -1,6 +1,6 @@
 {
   "name": "crossfilter-server",
-  "version": "1.0",
+  "version": "1.1.0",
   "license": "MIT",
   "copyright": "2014",
   "description": "Crossfilter Server is a JavaScript class that implements the interfaces of crossfilter but uses an OLAP server to compute filters and agregates on an OLAP cube.",
@@ -12,6 +12,7 @@
   ],
   "homepage": "https://github.com/loganalysis/crossfilter-server",
   "bugs": "https://github.com/loganalysis/crossfilter-server/issues",
+  "author" : "Thomas Robert (http://www.thomas-robert.fr)",
   "contributors": [
     "Thomas Robert (http://www.thomas-robert.fr)",
     "Thomas Szymanski <develop@tszymanski.com>"
